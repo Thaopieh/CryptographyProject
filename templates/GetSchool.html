@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student ID and Qualification Code Form</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/GetSchool.css') }}">
+</head>
+
+<body>
+    <form id="student-id-and-qualification-code-form">
+        <label for="SchoolName">Enter School Name:</label>
+        <input type="text" id="SchoolName" name="School Name" placeholder="Enter School Name">
+        <button type="submit">Get Certificate and Public key</button>
+    </form>
+    <!-- Modal structure -->
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <p id="modal-message"></p>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/GetSchool.js') }}"></script>
+</body>
+</html>

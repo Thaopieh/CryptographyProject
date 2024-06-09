@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student ID and Qualification Code Form</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/CreateRequestCert.css') }}">
+</head>
+
+<body>
+    <form id="student-id-and-qualification-code-form">
+        <label for="schoolname">School name:</label>
+        <input type="text" id="schoolname" name="schoolname" placeholder="Example : UIT">
+        <label for="Name">Enter schoolmaster name:</label>    
+        <input type="text" id="Name" name="Name" placeholder="Example : Nguyen Van A">
+        <label for="email">Enter schoolmaster email:</label>
+        <input type="text" id="email" name="email" placeholder="Example : nguyenvana@gmail.com">
+        <label for="country">Enter your Country:</label>
+        <input type="text" id="country" name="country" placeholder="Example : VN">
+        <label for="Province">Enter your State:</label>
+        <input type="text" id="Province" name="State" placeholder="Example : Ho Chi Minh">
+        <label for="City">Enter your City:</label>
+        <input type="text" id="City" name="City" placeholder="Example : Thu Duc">
+        <label for="Organization">Enter your Organization:</label>
+        <input type="text" id="Organization" name="Organization" placeholder="Example : UIT">
+        <label for="private-key-file">Choose Private Key File:</label>
+        <input type="file" id="private-key-file" name="public-key-file">
+        <button type="submit">Create Certificate Signing Request</button>
+    </form>
+    <!-- Modal structure -->
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <p id="modal-message"></p>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/CreateRequestCert.js') }}"></script>
+</body>
+</html>

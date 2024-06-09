@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/get.css') }}">
+    <title>Student ID and Qualification Code Form</title>
+</head>
+<body>
+    <form id="student-id-and-qualification-code-form">
+        <label for="student-id">Student ID:</label>
+        <input type="text" id="student-id" name="student-id" placeholder="Enter your student ID">
+        <label for="qualification-code">Qualification Code:</label>
+        <input type="text" id="qualification-code" name="qualification-code" placeholder="Enter your qualification code">
+        <label for="schoolname">Enter Your School Name:</label>
+        <input type="text" id="schoolname" name="schoolname" placeholder="Enter your school name">
+        <button type="submit">Get Qualifications</button>
+    </form>
+    <script src="{{ url_for('static', filename='js/get.js') }}"></script>
+</body>
+</html>

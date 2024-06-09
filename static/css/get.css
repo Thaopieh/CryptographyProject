@@ -1,0 +1,46 @@
+body {
+    font-family: sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+#student-id-and-qualification-code-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 2rem auto;
+    width: 400px; /* Increased width for larger form */
+    padding: 2rem; /* Increased padding for more space */
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+#student-id-and-qualification-code-form label {
+    display: block;
+    margin-bottom: 10px; /* Increased margin for better spacing */
+    font-size: 1.2rem; /* Increased label font size */
+    font-weight: bold;
+}
+
+#student-id-and-qualification-code-form input[type="text"] {
+    width: 100%; /* Maintains full width within the form */
+    padding: 15px; /* Increased padding for larger input fields */
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    font-size: 1.1rem; /* Increased input font size */
+}
+
+#student-id-and-qualification-code-form button {
+    background-color: #4CAF50;
+    color: white;
+    margin: 10px;
+    padding: 20px 30px; /* Increased padding for larger button */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1.2rem; /* Increased button text size */
+}
+
+#student-id-and-qualification-code-form button:hover {
+    background-color: #3e8e41;
+}

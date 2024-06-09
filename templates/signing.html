@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Choose an Option</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/signing.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Signing</h1>
+        <div class="button-container">
+            <button class="btn" id="signing-button">Signing</button>
+            <button class="btn">Create Private Key</button>
+        </div>
+    </div>
+
+    <div id="popup-form" class="popup">
+        <div class="popup-content">
+            <span class="close">&times;</span>
+            <h1>Signing</h1>
+            <form id="signing-form">
+                <fieldset>
+                    <legend>Nhập thông tin của người kí</legend>
+                    <label for="institution">Institution Name:</label>
+                    <input type="text" id="institution" name="institution" required>
+                    <br>
+                    <label for="authority">Authority Name:</label>
+                    <input type="text" id="authority" name="authority" required>
+                    <br>
+                    <label for="email">Authority Email:</label>
+                    <input type="email" id="email" name="email" required>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Nhập thông tin học sinh</legend>
+                    <label for="school">Student ID:</label>
+                    <input type="text" id="school" name="school" required>
+                    <br>
+                    <label for="studentname">Student Name:</label>
+                    <input type="text" id="studentname" name="studentname" required>
+                    <br>
+                    <label for="qualification">Qualification File:</label>
+                    <input type="file" id="qualification" name="qualification" required>
+                    <br>
+                    <label for="privatekey">Private Key:</label>
+                    <input type="file" id="privatekey" name="privatekey" required>
+
+                </fieldset>
+
+                <button type="submit">Sign File</button>
+            </form>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/Signing.js') }}"></script>
+</body>
+</html>

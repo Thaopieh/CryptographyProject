@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student ID and Qualification Code Form</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/IssueQualification.css') }}">
+</head>
+
+<body>
+    <form id="student-id-and-qualification-code-form">
+        <label for="schoolname">Issue qualificate</label>
+        <label for="schoolname">Enter School Name:</label>
+        <input type="text" id="schoolname" name="schoolname" placeholder="Enter your school name">
+        <label for="Mssv">Enter your ID student</label>
+        <input type="text" id="Mssv" name="Mssv" placeholder="Enter your ID student">
+        <label for="Name">Enter student name:</label>    
+        <input type="text" id="Name" name="Name" placeholder="Enter student name">
+        <label for="input-file">Choose Qualification File:</label>
+        <input type="file" id="input-file" name="input-file">
+        <label for="private-key-file">Choose Private Key File:</label>
+        <input type="file" id="private-key-file" name="private-key-file">
+        <button type="submit">Signature</button>
+    </form>
+    <!-- Modal structure -->
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <p id="modal-message"></p>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/IssueQualification.js') }}"></script>
+</body>
+</html>

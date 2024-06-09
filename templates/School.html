@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Choose an Option</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/school.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Choose an Option</h1>
+        <div class="button-container">
+            <button class="btn" id="CreateSchool">Create School</button>
+            <button class="btn" id="CreateRequestCertificate">Create Certificate Signing Request</button>
+            <button class="btn" id="CreateCertificate">Create Certificate</button>
+            <button class="btn" id="Createkey">Create key</button>
+            <button class="btn" id="IssueQualificate">Issue Qualification</button>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/School.js') }}"></script>
+</body>
+</html>
