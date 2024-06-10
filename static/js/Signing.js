@@ -61,7 +61,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
       if ("showSaveFilePicker" in window) {
         const options = {
-          suggestedName: "certificate_with_qr.pdf",
+          suggestedName: `${studentID}_certificate_with_qr.pdf`,
           types: [
             {
               description: "PDF file",
@@ -81,7 +81,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const a = document.createElement("a");
         a.style.display = "none";
         a.href = url;
-        a.download = "certificate_with_qr.pdf";
+        a.download = `${studentID}_certificate_with_qr.pdf`;
         document.body.appendChild(a);
         a.click();
         window.URL.revokeObjectURL(url);

@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", function () {
     event.preventDefault(); // Ngăn chặn gửi form theo cách thông thường
 
     // Lấy giá trị từ các trường nhập liệu
-    const schoolName = document.getElementById("schoolname").value;
+    const schoolName = localStorage.getItem("school_name"); // Lấy giá trị của school_name từ localStorage
     const authName = document.getElementById("Name").value;
     const authEmail = document.getElementById("email").value;
     const country = document.getElementById("country").value;

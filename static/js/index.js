@@ -10,5 +10,5 @@ document.getElementById("getQuali").addEventListener("click", function () {
 });
 document.getElementById("School").addEventListener("click", function () {
   // Sử dụng JavaScript để chuyển hướng tới trang signing.html
-  window.location.href = "/School";
+  window.location.href = "/account";
 });

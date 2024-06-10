@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student ID and Qualification Code Form</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/register.css') }}">
+</head>
+
+<body>
+    <form id="student-id-and-qualification-code-form">
+        <label for="schoolname">Become member</label>
+        <label for="schoolname">Enter School Name:</label>
+        <input type="text" id="schoolname" name="schoolname" placeholder="Enter your school name">
+        <label for="Name">Enter UseName:</label>
+        <input type="text" id="Name" name="Name" placeholder="Enter usename">
+        <label for="Name">Enter password:</label>    
+        <input type="text" id="password" name="Name" placeholder="Enter password">
+        <label for="Name">Enter confirm password:</label>    
+        <input type="text" id="confirm-password" name="Name" placeholder="Enter password">
+        <button type="submit">Register</button>
+    </form>
+    <!-- Modal structure -->
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <p id="modal-message"></p>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/register.js') }}"></script>
+</body>
+</html>

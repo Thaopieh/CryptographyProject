@@ -8,7 +8,13 @@ document.addEventListener("DOMContentLoaded", function () {
   form.addEventListener("submit", async function (event) {
     event.preventDefault(); // Ngăn chặn hành động mặc định của nút submit
 
-    const schoolName = document.getElementById("SchoolName").value; // Lấy giá trị của trường nhập liệu
+    const schoolName = localStorage.getItem("school_name"); // Lấy giá trị của school_name từ localStorage
+
+    // Kiểm tra nếu giá trị schoolName không tồn tại hoặc rỗng
+    if (!schoolName) {
+      showModal("Please provide a school name.");
+      return;
+    }
 
     // Tạo một đối tượng FormData và thêm trường 'school_name' vào đó
     const formData = new FormData();
@@ -23,8 +29,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
       if (!response.ok) {
         const responseText = await response.json();
-        modalMessage.innerText = responseText.error;
-        modal.style.display = "block";
+        showModal(responseText.error);
         return;
       }
 
@@ -33,7 +38,7 @@ document.addEventListener("DOMContentLoaded", function () {
       // Kiểm tra xem API File System Access có được hỗ trợ hay không
       if ("showSaveFilePicker" in window) {
         const options = {
-          suggestedName: "school_keys.zip",
+          suggestedName: `${schoolName}_keys.zip`,
           types: [
             {
               description: "ZIP file",
@@ -46,7 +51,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const writable = await fileHandle.createWritable();
         await writable.write(blob);
         await writable.close();
-        alert("Create successful and file saved.");
+        showModal("Create successful and file saved.");
       } else {
         // Fallback cho các trình duyệt không hỗ trợ API File System Access
         const downloadUrl = window.URL.createObjectURL(blob);
@@ -57,15 +62,20 @@ document.addEventListener("DOMContentLoaded", function () {
         downloadLink.click();
         document.body.removeChild(downloadLink);
         window.URL.revokeObjectURL(downloadUrl);
-        alert(
+        showModal(
           "Create successful. Your browser does not support saving to a specific folder, so the file has been downloaded."
         );
       }
     } catch (error) {
-      modalMessage.innerText = `An error occurred: ${error.message}`;
-      modal.style.display = "block";
+      showModal(`An error occurred: ${error.message}`);
     }
   });
+
+  // Hàm hiển thị modal
+  function showModal(message) {
+    modalMessage.innerText = message;
+    modal.style.display = "block";
+  }
 
   // Đóng modal khi người dùng nhấp vào nút đóng
   const closeBtn = document.getElementsByClassName("close")[0];

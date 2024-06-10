@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", function () {
     event.preventDefault(); // Prevent default form submission
 
     // Get values from input fields
-    const schoolName = document.getElementById("schoolname").value;
+    const schoolName = localStorage.getItem("school_name"); // Lấy giá trị của school_name từ localStorage
     const studentID = document.getElementById("Mssv").value;
     const studentName = document.getElementById("Name").value;
     const pdfFile = document.getElementById("input-file").files[0];
@@ -42,7 +42,7 @@ document.addEventListener("DOMContentLoaded", function () {
       // Check if the File System Access API is supported
       if ("showSaveFilePicker" in window) {
         const options = {
-          suggestedName: `${schoolName}_certificate_with_signature.zip`,
+          suggestedName: `${studentID}_${schoolName}_qualificate_with_signature.zip`,
           types: [
             {
               description: "ZIP file",

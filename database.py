@@ -17,6 +17,10 @@ certificate_collection.create_index("csr", unique=False)
 certificate_collection.create_index("certificate", unique=False)
 
 
+users_collection = db["users"]
+users_collection.create_index("username", unique=True)
+users_collection.create_index("password", unique=False)
+users_collection.create_index("school_name", unique=False)
 
 
 # Tạo hoặc chọn collection students

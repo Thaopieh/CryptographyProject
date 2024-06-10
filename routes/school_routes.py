@@ -1,9 +1,13 @@
-from flask import Blueprint, request, jsonify, send_file
+from flask import Blueprint, request, jsonify, send_file, session, redirect, url_for
 from pymongo import MongoClient
 import logging
 from config import get_db
 import io
 import tempfile
+import subprocess
+import os
+import zipfile
+import bcrypt
 school_bp = Blueprint('school', __name__)
 
 # Configure logging
@@ -28,6 +32,7 @@ def create_test_directory():
 def genKey(privateKey):
     command = pathOpenssl + "genpkey -algorithm dilithium3 -out test/" + privateKey + ".key"
     subprocess.run(command, shell=True)
+
 
 
 @school_bp.route('/genkey', methods=['POST'])
@@ -201,6 +206,9 @@ def get_certificate():
         os.remove(csr_path)
         os.remove(certificate_path)
 
+        # Thêm trường vào cơ sở dữ liệu
+        create_school(school_name, db)
+
         # Trả về tệp ZIP chứa cả hai chứng chỉ
         return send_file(
             zip_buffer,
@@ -214,6 +222,7 @@ def get_certificate():
 
 
 
+
 def detachPubKeyFromCert(cert_data, public_key_path):
     with tempfile.NamedTemporaryFile(delete=False, suffix='.crt') as cert_file:
         cert_file.write(cert_data)
@@ -223,53 +232,91 @@ def detachPubKeyFromCert(cert_data, public_key_path):
     subprocess.run(command, shell=True, check=True)
 
     os.remove(cert_file_path)
-
-@school_bp.route('/create_school', methods=['POST'])
-def create_school():
+def create_school(school_name, db):
     try:
-        school_name = request.form['school_name']
-        db = get_db()
         school_collection = db.school
+
+        # Kiểm tra xem trường có tên tương tự đã tồn tại không
         existing_school = school_collection.find_one({'school_name': school_name})
+
+        # Nếu trường đã tồn tại, cập nhật lại các giá trị mới
         if existing_school:
+            cert_collection = db.certificate
+            cert_entry = cert_collection.find_one({'school_name': school_name, 'status': 1})
 
-            return jsonify({'error': 'School name already exists'}), 400
-        # Lấy chứng chỉ từ cơ sở dữ liệu
-        cert_collection = db.certificate
-        cert_entry = cert_collection.find_one({'school_name': school_name, 'status': 1})
-        
-        if not cert_entry:
-            return jsonify({'error': 'Certificate not found or not signed'}), 404
+            if not cert_entry:
+                return {'error': 'Certificate not found or not signed'}, 404
 
-        cert_data = cert_entry['certificate']
-        
+            cert_data = cert_entry['certificate']
 
+            temp_public_path = f"temp/{school_name}_public.key"
 
-        temp_public_path = f"temp/{school_name}_public.key"  
+            detachPubKeyFromCert(cert_data, temp_public_path)
 
-        detachPubKeyFromCert(cert_data, temp_public_path)
-        
-        # Đọc khóa công khai từ tệp tạm
-        with open(temp_public_path, 'rb') as pub_file:
-            public_key_data = pub_file.read()
-        
-        # Xóa tệp tạm
-        os.remove(temp_public_path)
-        
-        # Thêm trường vào cơ sở dữ liệu
-        school_collection = db.school
-        school_collection.insert_one({
-            'school_name': school_name,
-            'auth_name': cert_entry['auth_name'],
-            'auth_email': cert_entry['auth_email'],
-            'certificate': cert_data,
-            'public_key': public_key_data
-        })
+            # Đọc khóa công khai từ tệp tạm
+            with open(temp_public_path, 'rb') as pub_file:
+                public_key_data = pub_file.read()
 
-        return jsonify({'success': 'School created successfully'})
+            # Xóa tệp tạm
+            os.remove(temp_public_path)
+
+            # Cập nhật giá trị mới cho trường đã tồn tại
+            update_result = school_collection.update_one(
+                {'school_name': school_name},
+                {'$set': {
+                    'auth_name': cert_entry['auth_name'],
+                    'auth_email': cert_entry['auth_email'],
+                    'certificate': cert_data,
+                    'public_key': public_key_data
+                }}
+            )
+
+            logger.info(f"School '{school_name}' updated successfully")
+
+            # Kiểm tra xem cập nhật đã thành công hay không
+            if update_result.modified_count == 1:
+                return {'success': 'School updated successfully'}
+            else:
+                return {'error': 'Failed to update school'}, 500
+
+        # Nếu trường chưa tồn tại, thêm trường mới vào cơ sở dữ liệu
+        else:
+            # Lấy chứng chỉ từ cơ sở dữ liệu
+            cert_collection = db.certificate
+            cert_entry = cert_collection.find_one({'school_name': school_name, 'status': 1})
+
+            if not cert_entry:
+                return {'error': 'Certificate not found or not signed'}, 404
+
+            cert_data = cert_entry['certificate']
+
+            temp_public_path = f"temp/{school_name}_public.key"
+
+            detachPubKeyFromCert(cert_data, temp_public_path)
+
+            # Đọc khóa công khai từ tệp tạm
+            with open(temp_public_path, 'rb') as pub_file:
+                public_key_data = pub_file.read()
+
+            # Xóa tệp tạm
+            os.remove(temp_public_path)
+
+            # Thêm trường mới vào cơ sở dữ liệu
+            school_collection.insert_one({
+                'school_name': school_name,
+                'auth_name': cert_entry['auth_name'],
+                'auth_email': cert_entry['auth_email'],
+                'certificate': cert_data,
+                'public_key': public_key_data
+            })
+
+            logger.info(f"School '{school_name}' created successfully")
+            return {'success': 'School created successfully'}
     except Exception as e:
-        logger.error(f"Error creating school: {e}")
-        return jsonify({'error': f'Error creating school: {str(e)}'}), 500
+        logger.error(f"Error creating/updating school: {e}")
+        return {'error': f'Error creating/updating school: {str(e)}'}, 500
+
+
 
 
 def getCert(privateKeyPath, certificateName, subj_fields, csr_only=False):

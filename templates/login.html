@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Form</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+</head>
+
+<body>
+    <form id="student-id-and-qualification-code-form">
+        <label for="schoolname">Login</label>
+        <label for="username">Enter Username:</label>
+        <input type="text" id="username" name="username" placeholder="Enter username">
+        <label for="password">Enter Password:</label>
+        <input type="password" id="password" name="password" placeholder="Enter password">
+        <button type="submit">Login</button>
+    </form>
+    <!-- Modal structure -->
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <p id="modal-message"></p>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/login.js') }}"></script>
+</body>
+</html>

@@ -2,14 +2,16 @@ from flask import Flask, render_template
 from routes.qualificate_routes import qualificate_bp
 from  routes.school_routes import school_bp
 from routes.student_routes import student_bp
+from  routes.authen_routes import authen_bp
 from flask_cors import CORS
 app = Flask(__name__)
 CORS(app)
 # Register blueprints
 app.register_blueprint(qualificate_bp, url_prefix='/qualificate')
 app.register_blueprint(school_bp, url_prefix='/school')
+app.register_blueprint(authen_bp, url_prefix='/authen')
 app.register_blueprint(student_bp, url_prefix='/student')
-
+app.secret_key = "demommhnhom16"
 @app.route('/home')
 def home():
     return render_template('index.html')
@@ -47,5 +49,14 @@ def CreateSchool():
 @app.route('/GetSchool')
 def GetSchool():
     return render_template('GetSchool.html')
+@app.route('/account')
+def account():
+    return render_template('account.html')
+@app.route('/login')
+def login():
+    return render_template('login.html')
+@app.route('/register')
+def register():
+    return render_template('register.html')
 if __name__ == '__main__':
     app.run(debug=True)

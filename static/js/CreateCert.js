@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", function () {
     event.preventDefault(); // Prevent form submission
 
     // Get the values from the input fields
-    const schoolName = document.getElementById("schoolname").value;
+    const schoolName = localStorage.getItem("school_name"); // Lấy giá trị của school_name từ localStorage
     const csrFile = document.getElementById("CSR-file").files[0];
 
     // Check if a CSR file is selected

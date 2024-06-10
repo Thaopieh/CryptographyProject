@@ -3,15 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student ID and Qualification Code Form</title>
+    <title>Create Cert</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/CreateCert.css') }}">
 </head>
 
 <body>
     <form id="student-id-and-qualification-code-form">
         <label for="schoolname">You must have csr file</label>
-        <label for="schoolname">Enter School name:</label>
-        <input type="text" id="schoolname" name="schoolname" placeholder="Example: UIT">
         <label for="CSR-file">Choose CSR File:</label>
         <input type="file" id="CSR-file" name="CSR-file">
         <button type="submit">Create Certificate</button>
