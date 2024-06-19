@@ -19,6 +19,7 @@ import subprocess
 import time
 import os
 import zipfile
+from middleware.auth import abac_required, before_request, load_user_from_db
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 pathOpenssl = os.path.join(current_dir, "..", "bin", "openssl ")
@@ -36,6 +37,7 @@ def genKey(privateKey):
 
 
 @school_bp.route('/genkey', methods=['POST'])
+@abac_required
 def generate_key():
     try:
         school_name = request.form['school_name']
@@ -90,9 +92,10 @@ def generate_key():
     except Exception as e:
         logger.error(f"Error generating private and public key: {e}")
         return jsonify({'error': f'Failed to generate private and public key: {str(e)}'}), 500
-
+    pass
     
 @school_bp.route('/require_cert', methods=['POST'])
+@abac_required
 def require_cert():
     try:
         # Lấy thông tin từ form
@@ -158,8 +161,10 @@ def require_cert():
     except Exception as e:
         logger.error(f"Error generating CSR: {e}")
         return jsonify({'error': f'Failed to generate CSR: {str(e)}'}), 500
+    pass
 
 @school_bp.route('/get_certificate', methods=['POST'])
+@abac_required
 def get_certificate():
     try:
         school_name = request.form['school_name']
@@ -219,10 +224,69 @@ def get_certificate():
     except Exception as e:
         logger.error(f"Error signing certificate: {e}")
         return jsonify({'error': f'Failed to sign certificate: {str(e)}'}), 500
+    pass
 
+@school_bp.route('/verify_public_key', methods=['POST'])
+def verify_public_key():
+    try:
+        school_name = request.form['school_name']
+        provided_public_key = request.files['public_key'].read()
 
+        db = get_db()
+        school_collection = db.school
+        school = school_collection.find_one({'school_name': school_name})
 
+        if not school:
+            return jsonify({'error': 'School not found'}), 404
 
+        cert_data = school['certificate']
+
+        temp_public_key_path = f"temp/{school_name}_extracted_public.key"
+
+        # Tách khóa công khai từ chứng chỉ
+        detachPubKeyFromCert(cert_data, temp_public_key_path)
+
+        with open(temp_public_key_path, 'rb') as pub_file:
+            extracted_public_key = pub_file.read()
+
+        # Xóa tệp tạm sau khi đã đọc
+        os.remove(temp_public_key_path)
+
+        # So sánh khóa công khai được cung cấp với khóa công khai đã tách ra từ chứng chỉ
+        if provided_public_key == extracted_public_key:
+            return jsonify({'success': 'Public key verified successfully'}), 200
+        else:
+            return jsonify({'error': 'Public key verification failed'}), 400
+
+    except Exception as e:
+        logger.error(f"Error verifying public key: {e}")
+        return jsonify({'error': f'Failed to verify public key: {str(e)}'}), 500
+    pass
+@school_bp.route('/verify_key_cert', methods=['POST'])
+def verify_key_cert():
+    try:
+        provided_public_key = request.files['public_key'].read()
+        cert_data = request.files['certificate'].read()
+
+        temp_public_key_path = f"temp/public_extracted_public.key"
+
+        # Tách khóa công khai từ chứng chỉ
+        detachPubKeyFromCert(cert_data, temp_public_key_path)
+
+        with open(temp_public_key_path, 'rb') as pub_file:
+            extracted_public_key = pub_file.read()
+
+        # Xóa tệp tạm sau khi đã đọc
+        os.remove(temp_public_key_path)
+
+        if provided_public_key == extracted_public_key:
+            return jsonify({'success': 'Khóa công khai khớp với chứng chỉ'}), 200
+        else:
+            return jsonify({'error': 'Khóa công khai không khớp với chứng chỉ'}), 400
+
+    except Exception as e:
+        logger.error(f"Error verifying public key: {e}")
+        return jsonify({'error': f'Xác minh khóa công khai thất bại: {str(e)}'}), 500
 def detachPubKeyFromCert(cert_data, public_key_path):
     with tempfile.NamedTemporaryFile(delete=False, suffix='.crt') as cert_file:
         cert_file.write(cert_data)
@@ -232,6 +296,8 @@ def detachPubKeyFromCert(cert_data, public_key_path):
     subprocess.run(command, shell=True, check=True)
 
     os.remove(cert_file_path)
+
+
 def create_school(school_name, db):
     try:
         school_collection = db.school
@@ -317,8 +383,6 @@ def create_school(school_name, db):
         return {'error': f'Error creating/updating school: {str(e)}'}, 500
 
 
-
-
 def getCert(privateKeyPath, certificateName, subj_fields, csr_only=False):
     # Tạo chuỗi thông tin về đối tượng chứng chỉ
     subj_str = "/".join([f"{k}={v}" for k, v in subj_fields.items()])
@@ -375,9 +439,11 @@ def get_school_info():
 
 
 @school_bp.route('/get_school_certificate', methods=['GET'])
+@abac_required
 def get_school_certificate():
     try:
         school_name = request.args.get('school_name')
+        print("school_name", school_name)
         db = get_db()
         school_collection = db.school
         school = school_collection.find_one({'school_name': school_name})
@@ -408,3 +474,4 @@ def get_school_certificate():
     except Exception as e:
         print(f"Error retrieving school certificate: {e}")
         return jsonify({'error': f'Failed to retrieve school certificate: {str(e)}'}), 500
+    pass

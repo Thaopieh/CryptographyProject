@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/verifykey.css') }}">
+</head>
+<body>
+    <form id="student-id-and-qualification-code-form">
+        <h1>Verify Publickey</h1>
+        <label for="qualification-file">Choose Certificate File:</label>
+        <input type="file" id="qualification-file" name="qualification-file">
+        <label for="public-key-file">Choose Public Key File:</label>
+        <input type="file" id="public-key-file" name="public-key-file">
+        <button type="submit">Verify Publickey</button>
+    </form>
+    <!-- Modal structure -->
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <p id="modal-message"></p>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/verifykey.js') }}"></script>
+</body>
+</html>

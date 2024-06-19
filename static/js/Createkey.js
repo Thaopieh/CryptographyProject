@@ -4,7 +4,6 @@ document.addEventListener("DOMContentLoaded", function () {
   );
   const modal = document.getElementById("myModal");
   const modalMessage = document.getElementById("modal-message");
-
   form.addEventListener("submit", async function (event) {
     event.preventDefault(); // Ngăn chặn hành động mặc định của nút submit
 

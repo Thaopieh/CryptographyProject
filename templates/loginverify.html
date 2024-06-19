@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login Form</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/loginverify.css') }}">
 </head>
 
 <body>
     <form id="student-id-and-qualification-code-form">
-        <label for="schoolname">Login For Principal</label>
+        <label for="schoolname">Login For Verify</label>
         <label for="username">Enter Username:</label>
         <input type="text" id="username" name="username" placeholder="Enter username">
         <label for="password">Enter Password:</label>
@@ -23,6 +23,6 @@
             <p id="modal-message"></p>
         </div>
     </div>
-    <script src="{{ url_for('static', filename='js/login.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/loginverify.js') }}"></script>
 </body>
 </html>

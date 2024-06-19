@@ -7,16 +7,13 @@ document.addEventListener("DOMContentLoaded", function () {
       event.preventDefault(); // Prevent form submission
       // Create FormData object
       const formData = new FormData();
-  
-      // Get the values from the input fields
-      const schoolName = document.getElementById("schoolname").value;
-      const role = "issuer";
+      const role = "verifier"
       const username = document.getElementById("Name").value;
       const password = document.getElementById("password").value;
       const confirmPassword = document.getElementById("confirm-password").value;
   
       // Validate input fields
-      if (!schoolName || !username || !password || !confirmPassword) {
+      if ( !username || !password || !confirmPassword) {
         showModal("Please fill in all fields.");
         return;
       }
@@ -25,9 +22,6 @@ document.addEventListener("DOMContentLoaded", function () {
         showModal("Passwords do not match.");
         return;
       }
-  
-      // Append form data to FormData object
-      formData.append("school_name", schoolName);
       formData.append("username", username);
       formData.append("password", password);
       formData.append("role", role);

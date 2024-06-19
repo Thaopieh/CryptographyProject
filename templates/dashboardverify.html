@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Choose an Option</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Verifier</h1>
+        <h2>Choose an Option</h2>
+        <div class="button-container">
+            <button class="btn" id="getqualificate">Get Qualification</button>
+            <button class="btn" id="Getkey">Get Certificate And Public key</button>
+            <button class="btn" id="verifykey">Verify Publickey</button>
+            <button class="btn" id="verifycertificate">Verify Certificate</button>
+            <button class="btn" id="logout">Logout</button>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+</body>
+</html>

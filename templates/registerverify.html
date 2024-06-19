@@ -4,14 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student ID and Qualification Code Form</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/register.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/registerverify.css') }}">
 </head>
 
 <body>
     <form id="student-id-and-qualification-code-form">
-        <label for="role">Register For Principal</label>
-        <label for="schoolname">Enter School Name:</label>
-        <input type="text" id="schoolname" name="schoolname" placeholder="Enter your school name">
+        <label for="role">Become member</label>
         <label for="Name">Enter UseName:</label>
         <input type="text" id="Name" name="Name" placeholder="Enter usename">
         <label for="Name">Enter password:</label>    
@@ -27,6 +25,6 @@
             <p id="modal-message"></p>
         </div>
     </div>
-    <script src="{{ url_for('static', filename='js/register.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/registerverify.js') }}"></script>
 </body>
 </html>

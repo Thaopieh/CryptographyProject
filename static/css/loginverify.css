@@ -21,8 +21,8 @@ body {
 }
 
 #student-id-and-qualification-code-form input[type="text"],
-#student-id-and-qualification-code-form input[type="file"],
-#student-id-and-qualification-code-form input[type="password"] {
+#student-id-and-qualification-code-form input[type="password"],
+#student-id-and-qualification-code-form input[type="file"] {
     width: calc(100% - 30px); /* Adjust width for input fields */
     padding: 12px;
     margin-bottom: 20px; /* Increase spacing between input fields */
@@ -33,8 +33,8 @@ body {
 }
 
 #student-id-and-qualification-code-form input[type="text"]:focus,
-#student-id-and-qualification-code-form input[type="file"]:focus,
-#student-id-and-qualification-code-form input[type="password"]:focus {
+#student-id-and-qualification-code-form input[type="password"]:focus,
+#student-id-and-qualification-code-form input[type="file"]:focus {
     outline: none;
     border-color: #4CAF50; /* Highlight focused input fields */
 }

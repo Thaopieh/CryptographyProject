@@ -8,21 +8,44 @@ document
     const qualificationFile =
       document.getElementById("qualification-file").files[0];
     const publicKeyFile = document.getElementById("public-key-file").files[0];
+    const school_name = document.getElementById("school_name").value;
 
-    if (!qualificationFile || !publicKeyFile) {
-      alert("Please select both qualification and public key files.");
+    if (
+      !qualificationFile ||
+      !publicKeyFile ||
+      !school_name ||
+      !qualificationCode
+    ) {
+      alert("Please provide all required fields.");
       return;
     }
 
-    const formData = new FormData();
-    formData.append("qualificate_id", qualificationCode);
-    formData.append("qualificate", qualificationFile);
-    formData.append("public_key", publicKeyFile);
+    // Step 1: Verify public key
+    var publicKeyFormData = new FormData();
+    publicKeyFormData.append("public_key", publicKeyFile);
+    publicKeyFormData.append("school_name", school_name);
 
-    fetch("http://localhost:5000/qualificate/verify_qualificate", {
+    fetch("http://localhost:5000/school/verify_public_key", {
       method: "POST",
-      body: formData,
+      body: publicKeyFormData,
     })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.success) {
+          // Step 2: Verify qualification
+          var formData = new FormData();
+          formData.append("qualificate_id", qualificationCode);
+          formData.append("qualificate", qualificationFile);
+          formData.append("public_key", publicKeyFile);
+
+          return fetch("http://localhost:5000/qualificate/verify_qualificate", {
+            method: "POST",
+            body: formData,
+          });
+        } else {
+          throw new Error("Public key verification failed");
+        }
+      })
       .then((response) => response.json())
       .then((data) => {
         const modal = document.getElementById("myModal");

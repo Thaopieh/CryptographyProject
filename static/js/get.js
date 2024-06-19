@@ -7,12 +7,16 @@ document
     const qualificationCode =
       document.getElementById("qualification-code").value;
     const schoolName = document.getElementById("schoolname").value;
+    // Function to decode JWT token
 
     try {
       const response = await fetch(
         `http://localhost:5000/qualificate/get_qualificate?student_id=${studentId}&qualificate_id=${qualificationCode}&school_name=${encodeURIComponent(
           schoolName
-        )}`
+        )}`,
+        {
+          method: "GET",
+        }
       );
 
       if (!response.ok) {

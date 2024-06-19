@@ -24,7 +24,10 @@ import random
 
 import subprocess
 import time
-import os
+
+from middleware.auth import abac_required, before_request, load_user_from_db
+
+
 
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -46,7 +49,7 @@ def detachPubKeyFromCert(cert_file, public_key_file):
 def signData(privateKey, dataFile, signatureFile):
     command = pathOpenssl + "dgst -sha256 -sign " + privateKey + " -out " + signatureFile + " " + dataFile
     subprocess.run(command, shell=True)
-
+# openssl base64 -in dgstsignfile -out dgstsignfile.pem
 
 def verifySignature(public_key_path, qualificate_path, signature_path):
     try:
@@ -181,6 +184,7 @@ def embed_qr_in_existing_pdf(pdf_stream, qr_img):
         return None
 
 @qualificate_bp.route('/issue_qualificate', methods=['POST'])
+@abac_required
 def issue_qualificate():
     try:
         school_name = request.form['school_name']
@@ -281,15 +285,17 @@ def issue_qualificate():
 import zipfile
 
 @qualificate_bp.route('/get_qualificate', methods=['GET'])
+@abac_required
 def get_qualificate_file():
     try:
         db = get_db()
         collection = db.qualification
         student = db.students
+        schools = db.school
         student_id = request.args.get('student_id')
         qualificate_id = request.args.get('qualificate_id')    
         school_name = request.args.get('school_name')
-        
+        print (student_id, qualificate_id, school_name)
         # Check if all parameters are provided
         if not student_id or not qualificate_id or not school_name:
             return jsonify({'error': 'Missing required parameters'}), 400
@@ -314,16 +320,14 @@ def get_qualificate_file():
         pdf_data = items['qualificate']
 
         # Retrieve the school's certificate
-        school_response = requests.get(
-            'http://localhost:5000/school/get_school_certificate',
-            params={'school_name': school_name}
-        )
+        school = schools.find_one({'school_name': school_name})
         
-        if school_response.status_code != 200:
-            logger.error(f"Failed to retrieve school certificate for: {school_name}, status_code: {school_response.status_code}")
-            return jsonify({'error': 'Failed to retrieve school certificate'}), school_response.status_code
-        
-        certificate_data = school_response.content
+        if not school:
+            logger.error(f"School not found: {school_name}")
+            return jsonify({'error': 'School not found'}), 404
+
+        certificate_data = school['certificate']  # Assuming the certificate is stored in the 'certificate' field
+
 
         # Create temporary files for qualificate and certificate
         with tempfile.NamedTemporaryFile(delete=False, suffix='.pdf') as qualificate_file:
@@ -386,9 +390,8 @@ def get_signature_file():
 
 
 
-
-
 @qualificate_bp.route('/verify_qualificate', methods=['POST'])
+@abac_required
 def verify_qualificate():
     try:
         qualificate_id = request.form['qualificate_id']
@@ -435,6 +438,7 @@ def verify_qualificate():
 
 
 @qualificate_bp.route('/certificate', methods=['GET'])
+@abac_required
 def get_qualificate():
     try:
         student_name = request.args.get('student_name')
@@ -450,6 +454,8 @@ def get_qualificate():
     except Exception as e:
         logger.error(f"Error getting certificate: {e}")
         return jsonify({'error': 'Failed to get certificate'}), 500
+
+
 
 # Ensure UuidRepresentation is defined
 from pymongo import common

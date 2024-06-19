@@ -21,7 +21,7 @@ users_collection = db["users"]
 users_collection.create_index("username", unique=True)
 users_collection.create_index("password", unique=False)
 users_collection.create_index("school_name", unique=False)
-
+users_collection.create_index("role", unique=False)
 
 # Tạo hoặc chọn collection students
 students_collection = db["students"]
